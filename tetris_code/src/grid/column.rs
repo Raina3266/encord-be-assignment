@@ -33,6 +33,10 @@ impl Column {
 
         self.cells[height] = value;
     }
+
+    pub fn remove(&mut self, height: usize) {
+        self.cells.remove(height);
+    }
 }
 
 #[cfg(test)]
