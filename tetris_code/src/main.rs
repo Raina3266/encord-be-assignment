@@ -9,6 +9,9 @@ mod grid;
 mod input;
 mod shape;
 
+#[cfg(test)]
+mod tests;
+
 fn main() -> Result<()> {
     main_loop(stdin(), stdout(), 10)
 }
