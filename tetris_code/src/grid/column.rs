@@ -1,3 +1,6 @@
+/// A single column in the grid
+///
+/// A column acts like it has no height limit. There are no out-of-bounds errors
 #[derive(Debug, Clone)]
 pub struct Column {
     cells: Vec<bool>,
@@ -8,6 +11,9 @@ impl Column {
         Self { cells: vec![] }
     }
 
+    /// The height of the highest filled square
+    /// 
+    /// If the column is empty, this will be 0
     pub fn max_height(&self) -> usize {
         self.cells
             .iter()
@@ -34,15 +40,16 @@ impl Column {
         self.cells[height] = value;
     }
 
+    /// Remove the cell at a particular height, and shift everything above it down by one square
     pub fn remove(&mut self, height: usize) {
-        self.cells.remove(height);
+        if height < self.cells.len() {
+            self.cells.remove(height);
+        }
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use std::usize;
-
     use super::*;
 
     #[test]

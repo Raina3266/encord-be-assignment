@@ -9,6 +9,9 @@ pub enum InputToken {
     Entry { shape: Shape, position: u8 },
 }
 
+/// A wrapper around something that implements [`Read`] that produces [`InputToken`]s
+/// 
+/// It's like an `Iterator`, but uses a custom function [`Input::next_token`].
 pub struct Input<R: Read> {
     // Iterator of Result<u8>
     //

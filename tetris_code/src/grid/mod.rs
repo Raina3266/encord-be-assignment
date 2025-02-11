@@ -4,6 +4,7 @@ use crate::shape::Shape;
 
 mod column;
 
+/// A tetris grid
 pub struct Grid {
     columns: Vec<Column>,
 }
@@ -14,6 +15,7 @@ impl Grid {
         Self { columns }
     }
 
+    /// The highest filled square in any column
     pub fn max_height(&self) -> usize {
         self.columns
             .iter()
@@ -22,6 +24,9 @@ impl Grid {
             .expect("at least one column")
     }
 
+    /// Insert a shape at a particular position
+    /// 
+    /// For example, calling `grid.add_shape(Shape::Q, 5)` will put the "Q" shape in column 5
     pub fn add_shape(&mut self, shape: Shape, position: u8) {
         let height = self.calculate_insert_height(shape, position);
         self.fill_in_cells(shape, position, height);
