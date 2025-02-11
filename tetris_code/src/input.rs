@@ -1,4 +1,4 @@
-use std::io::{Read, Result};
+use std::io::{BufReader, Bytes, Read, Result};
 
 use crate::shape::Shape;
 
@@ -6,20 +6,44 @@ use crate::shape::Shape;
 pub enum InputToken {
     End,
     NewLine,
-    Entry { shape: Shape, position: usize },
+    Entry { shape: Shape, position: u8 },
 }
 
 pub struct Input<R: Read> {
-    inner: R,
+    // Iterator of Result<u8>
+    //
+    // BufReader adds buffering. Rust IO is unbuffered by default
+    inner: Bytes<BufReader<R>>,
 }
 
 impl<R: Read> Input<R> {
     pub fn new(inner: R) -> Self {
-        todo!()
+        Self {
+            inner: BufReader::new(inner).bytes(),
+        }
     }
 
     pub fn next_token(&mut self) -> Result<InputToken> {
-        todo!()
+        let Some(next_byte) = self.inner.next() else {
+            return Ok(InputToken::End);
+        };
+
+        let mut next_byte = next_byte?;
+
+        // handle special cases
+        match next_byte {
+            b'\n' => return Ok(InputToken::NewLine),
+            // if it's a comma, skip one byte
+            b',' => next_byte = self.inner.next().expect("input is valid")?,
+            _ => {}
+        }
+
+        let shape = Shape::from_byte(next_byte).expect("input is valid");
+        let position = self.inner.next().expect("input is valid")?;
+        let position = position - b'0';
+        
+        Ok(InputToken::Entry { shape, position })
+
     }
 }
 
@@ -38,7 +62,7 @@ mod tests {
                 position: 0
             }
         );
-        
+
         assert_eq!(
             input.next_token().unwrap(),
             InputToken::Entry {
