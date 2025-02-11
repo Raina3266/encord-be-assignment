@@ -1,23 +1,37 @@
 #[derive(Debug, Clone)]
 pub struct Column {
-
+    cells: Vec<bool>,
 }
 
 impl Column {
     pub fn new() -> Self {
-        todo!()
+        Self { cells: vec![] }
     }
 
     pub fn max_height(&self) -> usize {
-        todo!()
+        self.cells
+            .iter()
+            .enumerate()
+            .rev() // iterate from end, more efficient in tall columns
+            .filter_map(|(index, value)| match value {
+                true => Some(index),
+                false => None,
+            })
+            .map(|index| index + 1)
+            .next()
+            .unwrap_or(0)
     }
-    
+
     pub fn get(&self, height: usize) -> bool {
-        todo!()
+        self.cells.get(height).copied().unwrap_or(false)
     }
 
     pub fn set(&mut self, height: usize, value: bool) {
-        todo!()
+        if height >= self.cells.len() {
+            self.cells.resize_with(height + 1, || false);
+        }
+
+        self.cells[height] = value;
     }
 }
 
@@ -38,5 +52,20 @@ mod tests {
         col.set(5, true);
         assert_eq!(col.get(5), true);
     }
-}
 
+    #[test]
+    fn max_height_works() {
+        let mut col = Column::new();
+
+        assert_eq!(col.max_height(), 0);
+
+        col.set(4, true);
+        assert_eq!(col.max_height(), 5);
+
+        col.set(4, false);
+        assert_eq!(col.max_height(), 0);
+
+        col.set(9, true);
+        assert_eq!(col.max_height(), 10);
+    }
+}
