@@ -27,7 +27,7 @@ impl Grid {
     }
 
     /// Insert a shape at a particular position
-    /// 
+    ///
     /// For example, calling `grid.add_shape(Shape::Q, 5)` will put the "Q" shape in column 5
     pub fn add_shape(&mut self, shape: Shape, position: u8) {
         let height = self.calculate_insert_height(shape, position);
@@ -57,7 +57,7 @@ impl Grid {
 
     /// This function returns a range of rows that were modified, which is given to `remove_full_rows`
     /// This means `remove_full_rows` only has to check a small number of rows, instead of checking the entire grid
-    /// 
+    ///
     /// The `insert_and_clear` benchmark took 20ms before this change, and took 300us after, so its a lot faster
     fn fill_in_cells(&mut self, shape: Shape, position: u8, height: usize) -> Range<usize> {
         let mut min_y = usize::MAX;
@@ -96,7 +96,7 @@ impl Grid {
                 return false;
             }
         }
-        
+
         true
     }
 
@@ -117,6 +117,11 @@ impl Grid {
 
 #[cfg(test)]
 mod tests {
+    use proptest::collection::vec;
+    use test_strategy::proptest;
+
+    use crate::shape::proptest_helper::valid_shape;
+
     use super::*;
 
     #[test]
@@ -128,5 +133,22 @@ mod tests {
         grid.debug_print();
 
         assert_eq!(grid.max_height(), 4);
+    }
+
+    #[proptest]
+    fn inserts_any_valid_shape(#[strategy(vec(valid_shape(), 0..1000))] shapes: Vec<(Shape, u8)>) {
+        let total_shape_height = shapes
+            .iter()
+            .map(|(shape, _)| shape.max_height())
+            .sum();
+
+        let mut grid = Grid::new(10);
+
+        // shouldnt panic
+        for (shape, position) in shapes {
+            grid.add_shape(shape, position);
+        }
+
+        assert!(grid.max_height() <= total_shape_height);
     }
 }

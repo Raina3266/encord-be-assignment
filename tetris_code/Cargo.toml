@@ -6,6 +6,8 @@ edition = "2021"
 [dev-dependencies]
 criterion = "0.5.1"
 iter-read = "1.1.0"
+proptest = "1.6.0"
+test-strategy = "0.4.0"
 
 [[bench]]
 harness = false

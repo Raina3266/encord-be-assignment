@@ -1,4 +1,5 @@
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(test, derive(test_strategy::Arbitrary))]
 pub enum Shape {
     Q,
     Z,
@@ -25,7 +26,7 @@ impl Shape {
     }
 
     /// Which squares does this shape occupy, relative to the bottom left corner
-    /// 
+    ///
     /// `(0, 0)` is the bottom left corner
     /// `(1, 0)` is one square to the right
     /// `(0, 1)` is one square up
@@ -54,9 +55,39 @@ impl Shape {
             Self::J => &[3, 3],
         }
     }
-    
+
     /// The height of the tallest column
     pub fn max_height(&self) -> usize {
-        *self.column_heights().iter().max().expect("all shapes have at least 1 column")
+        *self
+            .column_heights()
+            .iter()
+            .max()
+            .expect("all shapes have at least 1 column")
+    }
+}
+
+#[cfg(test)]
+pub mod proptest_helper {
+    use proptest::prelude::*;
+
+    use super::Shape;
+
+    /// strategy that gives random shapes and valid positions for them to be
+    pub fn valid_shape() -> impl Strategy<Value = (Shape, u8)> {
+        any::<Shape>().prop_flat_map(|shape| {
+            let width: u8 = match shape {
+                Shape::Q => 2,
+                Shape::Z => 3,
+                Shape::S => 3,
+                Shape::T => 3,
+                Shape::I => 4,
+                Shape::L => 2,
+                Shape::J => 2,
+            };
+
+            let valid_position = 0..=(10 - width);
+
+            (Just(shape), valid_position)
+        })
     }
 }
