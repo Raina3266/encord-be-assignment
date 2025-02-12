@@ -12,7 +12,7 @@ impl Column {
     }
 
     /// The height of the highest filled square
-    /// 
+    ///
     /// If the column is empty, this will be 0
     pub fn max_height(&self) -> usize {
         self.cells

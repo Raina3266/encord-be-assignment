@@ -5,7 +5,7 @@ fn test_e2e(input: &str, expected_output: &str) {
     let mut output = Vec::new();
 
     main_loop(input.as_bytes(), &mut output, 10).unwrap();
-    
+
     let output = String::from_utf8(output).unwrap();
     assert_eq!(output.trim(), expected_output);
 }

@@ -3,7 +3,6 @@ use std::hint::black_box;
 use criterion::{criterion_group, criterion_main, Criterion};
 use tetris::{grid::Grid, shape::Shape};
 
-
 fn add_shapes(c: &mut Criterion) {
     c.bench_function("insert_and_clear", |bencher| {
         bencher.iter(|| {

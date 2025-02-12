@@ -137,10 +137,7 @@ mod tests {
 
     #[proptest]
     fn inserts_any_valid_shape(#[strategy(vec(valid_shape(), 0..1000))] shapes: Vec<(Shape, u8)>) {
-        let total_shape_height = shapes
-            .iter()
-            .map(|(shape, _)| shape.max_height())
-            .sum();
+        let total_shape_height = shapes.iter().map(|(shape, _)| shape.max_height()).sum();
 
         let mut grid = Grid::new(10);
 
