@@ -5,9 +5,9 @@ use std::io::{Read, Result, Write};
 use grid::Grid;
 use input::{Input, InputToken};
 
-mod grid;
-mod input;
-mod shape;
+pub mod grid;
+pub mod input;
+pub mod shape;
 
 #[cfg(test)]
 mod tests;
