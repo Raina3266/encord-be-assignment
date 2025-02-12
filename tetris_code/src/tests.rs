@@ -38,3 +38,19 @@ fn shapes_have_expected_height() {
     test_e2e("L0", "3");
     test_e2e("J0", "3");
 }
+
+#[test]
+fn correct_answer_for_provided_test_case() {
+    let provided_input = include_bytes!("../../tests/input.txt");
+    let mut output = Vec::new();
+
+    main_loop(&provided_input[..], &mut output, 10).unwrap();
+
+    let output = String::from_utf8(output).unwrap();
+    let output_lines: Vec<i32> = output.lines().map(|line| line.parse().unwrap()).collect();
+
+    // calculated by hand
+    let expected_output = [2, 4, 0, 2, 4, 1, 0, 2, 2, 2, 1, 1, 4, 3, 1, 2, 1, 8, 8, 0];
+
+    assert_eq!(output_lines, expected_output)
+}
