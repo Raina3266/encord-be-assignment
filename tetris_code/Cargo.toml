@@ -3,10 +3,9 @@ name = "tetris"
 version = "0.1.0"
 edition = "2021"
 
-[dependencies]
-
 [dev-dependencies]
 criterion = "0.5.1"
+iter-read = "1.1.0"
 
 [[bench]]
 harness = false
