@@ -44,6 +44,8 @@ impl<R: Read> Input<R> {
         let shape = Shape::from_byte(next_byte).expect("input is valid");
         let position = self.inner.next().expect("input is valid")?;
         let position = position - b'0';
+        // let direction = self.inner.next().unwrap()?;
+        // let direction = Direction::from_byte(direction).unwrap();
 
         Ok(InputToken::Entry { shape, position })
     }

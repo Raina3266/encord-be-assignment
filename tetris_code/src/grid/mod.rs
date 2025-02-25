@@ -40,7 +40,6 @@ impl Grid {
         let total_heights =
             shape
                 .column_heights()
-                .iter()
                 .enumerate()
                 .map(|(shape_column, shape_height)| {
                     let column_index = shape_column + position as usize;

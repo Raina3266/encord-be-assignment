@@ -10,6 +10,39 @@ pub enum Shape {
     J,
 }
 
+// pub enum Direction {
+//     S,
+//     W,
+//     E,
+//     N,
+// }
+
+// impl Direction {
+//     pub fn from_byte(letter: u8) -> Option<Direction> {
+//         match letter {
+//             b'S' => Some(Direction::S),
+//             b'W' => Some(Direction::W),
+//             b'E' => Some(Direction::E),
+//             b'N' => Some(Direction::N),
+//             _ => None,
+//         }
+//     }
+
+//     fn rotate_90(point: (isize, isize)) -> (isize, isize) {
+//         let (x, y) = point;
+//         (-y, x)
+//     }
+
+//     fn rotate(&self, point: (isize, isize)) -> (isize, isize) {
+//         match self {
+//             Self::N => point,
+//             Self::W => self.rotate(point),
+//             Self::S => self.rotate(self.rotate(point)),
+//             Self::E => self.rotate(self.rotate(self.rotate(point))),
+//         }
+//     }
+// }
+
 impl Shape {
     /// Makes a `Shape` from an ASCII byte for its letter
     pub fn from_byte(letter: u8) -> Option<Shape> {
@@ -43,24 +76,29 @@ impl Shape {
     }
 
     /// The height of each column in the shape from the bottom
-    pub fn column_heights(&self) -> &'static [usize] {
+    pub fn column_heights(&self) -> impl Iterator<Item = usize> + '_ {
         // TODO(raina): calculate from .cells_occupied()
-        match self {
-            Self::Q => &[2, 2],
-            Self::Z => &[1, 2, 2],
-            Self::S => &[2, 2, 1],
-            Self::T => &[1, 2, 1],
-            Self::I => &[1, 1, 1, 1],
-            Self::L => &[3, 3],
-            Self::J => &[3, 3],
-        }
+
+        (0..10).filter_map(|current_x| {
+            let y_value = self
+                .cells_occupied()
+                .iter()
+                .filter(|(x, _y)| *x == current_x)
+                .map(|(_x, y)| y);
+
+            let max_y = y_value.clone().max();
+            let min_y = y_value.clone().min();
+
+            match (max_y, min_y) {
+                (Some(max_y), Some(min_y)) => Some(max_y - min_y + 1),
+                _ => None,
+            }
+        })
     }
 
     /// The height of the tallest column
     pub fn max_height(&self) -> usize {
-        *self
-            .column_heights()
-            .iter()
+        self.column_heights()
             .max()
             .expect("all shapes have at least 1 column")
     }

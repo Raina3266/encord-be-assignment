@@ -1,0 +1,7 @@
+# Seeds for failure cases proptest has generated in the past. It is
+# automatically read and these particular cases re-run before any
+# novel cases are generated.
+#
+# It is recommended to check this file in to source control so that
+# everyone who runs the test benefits from these saved cases.
+cc d43381a080c74f9dbdaf7ac427a4bd152b6a8ecc0e406676f1b4cbd8f36434f2 # shrinks to input = _InsertsAnyValidShapeArgs { shapes: [(Q, 0)] }
